@@ -15,9 +15,11 @@ gulp.task('less', function() {
       gulp.dest('src/css')).pipe(mincss()).pipe(gulp.dest('./css'));
 });
 
-var watcher = gulp.watch('src/less/*.less', ['less']);
-watcher.on('change', function(event) {
-  console.log('File ' + event.path + ' was ' + event.type + ', running tasks...');
+gulp.task('watch', function() {
+  var watcher = gulp.watch('src/less/*.less', ['less']);
+  watcher.on('change', function(event) {
+    console.log('File ' + event.path + ' was ' + event.type + ', running tasks...');
+  });
 });
 
 gulp.task('uglify', function() {
