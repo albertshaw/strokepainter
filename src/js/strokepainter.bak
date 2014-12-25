@@ -1,0 +1,157 @@
+Raphael.fn.StrokePainter = function(options) {
+  var paper = this, canvas = $(paper.canvas);
+  var paths = [], path = [], isPainting = false;
+  canvas.on('mousedown', function(evt) {
+    path = [];
+    path.push('M');
+    path.push(evt.offsetX);
+    path.push(evt.offsetY);
+    var p;
+    isPainting = true;
+    canvas.on('mousemove', function(evt) {
+      path.push('L');
+      path.push(evt.offsetX);
+      path.push(evt.offsetY);
+      if (!p) {
+        p = paper.path().attr({
+          stroke : '#000',
+          'stroke-width' : 2,
+          path : path
+        });
+        paths.push(p);
+      }
+      p.attr({
+        path : path
+      })
+    });
+  });
+  $(document).on('mouseup', function() {
+    if (!isPainting) {
+      return;
+    }
+    canvas.off('mousemove');
+    isPainting = false;
+    var p = paths[paths.length - 1], points = [];
+    if (!p) {
+      return;
+    }
+    for (var i = 0, idx = 0; i < path.length;) {
+      points.push({
+        a : path[i++],
+        x : path[i++],
+        y : path[i++],
+        i : idx++
+      });
+    }
+    console.log('Before compress', path.join(','));
+    dp(points[0], points[points.length - 1], points);
+    path = [];
+    var point = {};
+    for (var i = 0; i < points.length; i++) {
+      point = points[i];
+      if (!point.remove) {
+        path.push(point.a);
+        path.push(point.x);
+        path.push(point.y);
+      }
+    }
+    path = ph(path);
+    console.log('After compress', path.join(','));
+    p.attr('path', path);
+  });
+  function ph(paths) {
+    var arr = [], mv = paths.splice(0, 3), c, n, nn;
+    arr.push('M');
+    arr.push(mv[1]);
+    arr.push(mv[2]);
+    while (paths.length > 0) {
+      c = paths.splice(0, 3);
+      n = paths.splice(0, 3);
+      nn = paths.splice(0, 3);
+      if (nn && nn.length) {
+        arr.push('C');
+        arr.push(c[1]);
+        arr.push(c[2]);
+        arr.push(n[1]);
+        arr.push(n[2]);
+        arr.push(nn[1]);
+        arr.push(nn[2]);
+      } else if (n && n.length) {
+        arr.push('Q');
+        arr.push(c[1]);
+        arr.push(c[2]);
+        arr.push(n[1]);
+        arr.push(n[2]);
+      } else {
+        arr.push('L')
+        arr.push(c[1]);
+        arr.push(c[2]);
+      }
+    }
+    return arr;
+  }
+  function dp(from, to, points) {
+    var switchvalue = false;
+    var A = (from.y - to.y)
+        / Math
+            .sqrt(Math.pow((from.y - to.y), 2) + Math.pow((from.x - to.x), 2));
+    var B = (to.x - from.x)
+        / Math
+            .sqrt(Math.pow((from.y - to.y), 2) + Math.pow((from.x - to.x), 2));
+
+    var C = (from.x * to.y - to.x * from.y)
+        / Math
+            .sqrt(Math.pow((from.y - to.y), 2) + Math.pow((from.x - to.x), 2));
+
+    var dmax = 0;
+    var m = points.indexOf(from);
+    var n = points.indexOf(to);
+    if (n == m + 1) {
+      return;
+    }
+
+    var middle = {};
+    var distance = [];
+    for (var i = m + 1; i < n; i++) {
+      distance.push(Math.abs(A * (points[i].x) + B * (points[i].y) + C)
+          / Math.sqrt(Math.pow(A, 2) + Math.pow(B, 2)));
+    }
+    dmax = Math.max.apply(Math, distance);
+    if (dmax > 5) {
+      switchvalue = true;
+    } else {
+      switchvalue = false;
+    }
+    if (!switchvalue) {
+      for (var i = m + 1; i < n; i++) {
+        points[i].remove = true;
+      }
+    } else {
+      for (var i = m + 1; i < n; i++) {
+        if ((Math.abs(A * (points[i].x) + B * (points[i].y) + C)
+            / Math.sqrt(Math.pow(A, 2) + Math.pow(B, 2)) == dmax)) {
+          middle = points[i];
+        }
+      }
+      dp(from, middle, points);
+      dp(middle, to, points);
+    }
+  }
+  return paper;
+};
+
+(function() {
+  var paper = window.paper = Raphael("mycanvas", 800, 600).StrokePainter({});
+  $('#anim').on('click', function() {
+    $('#mycanvas').toggleClass('anim');
+  });
+  $('#filechooser').on('change', function(evt) {
+    var file = evt.target.files[0];
+    var reader = new FileReader();
+    reader.onload = function(e) {
+      console.log(e.target);
+      paper.image(e.target.result, 0, 0, 800, 600)
+    };
+    reader.readAsDataURL(file);
+  })
+})();

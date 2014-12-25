@@ -1,0 +1,62 @@
+.main-header {
+  position: fixed;
+  z-index: 1;
+  top: 0;
+  display: table;
+  width: 100%;
+  height: @header-height;
+  text-align: center;
+  overflow: hidden;
+  min-height: 0;
+  margin-bottom: 0;
+}
+
+.main-nav {
+  position: relative;
+  padding: 10px 15px;
+  a {
+    text-decoration: none;
+    font-family: 'Open Sans', sans-serif;
+  }
+
+  [class ^= "icon-"] , [class *= " icon-"] {
+    position: relative;
+    top: 3px;
+    right: 3px;
+  }
+}
+
+.back-button , .subscribe-button {
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+  display: inline-block;
+  float: left;
+  height: 38px;
+  padding: 0 15px 0 10px;
+  border: transparent 1px solid;
+  color: #9EABB3;
+  text-align: center;
+  font-size: 12px;
+  text-transform: uppercase;
+  line-height: 35px;
+  border-radius: 3px;
+  background: rgba(0, 0, 0, 0.1);
+  transition: all ease 0.3s;
+  &:hover {
+    border-color: #bfc8cd;
+    color: #9EABB3;
+  }
+}
+
+.back-button {
+  float: left;
+  padding: 0 15px 0 10px;
+}
+
+.subscribe-button {
+  float: right;
+  padding: 0 20px;
+  white-space: nowrap;
+}
+

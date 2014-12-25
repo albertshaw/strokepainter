@@ -1,0 +1,59 @@
+/* Scroll Bar */
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: rgba(50, 50, 50, .5);
+  border :2px solid transparent;
+  border-radius: 10px;
+  background-clip:padding-box;
+}
+
+::-webkit-scrollbar-button {
+  width: 10px;
+  height: 10px;
+  background-color: transparent;  
+}
+
+::-webkit-scrollbar-track {
+  background-color: transparent;
+}
+
+::-webkit-scrollbar-track-piece {
+  background-color: transparent;
+}
+
+/* Clears shit */
+.clearfix {
+  &:before , &:after {
+    content: " ";
+    display: table;
+  }
+
+  &:after {
+    clear: both;
+  }
+
+  *zoom: 1;
+}
+
+.hidden {
+  text-indent: -9999px;
+  visibility: hidden;
+  display: none;
+}
+
+.inner {
+  position: relative;
+  width: 80%;
+  max-width: 710px;
+  margin: 0 auto;
+}
+
+.vertical {
+  display: table-cell;
+  vertical-align: middle;
+}
+

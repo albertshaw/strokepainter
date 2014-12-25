@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="keywords" content="raphael" />
+  <meta name="description" content="raphael" />
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>X1a0L0nG's Tools - StrokePainter</title>
+  <link rel="stylesheet" href="css/strokepainter.css">
+</head>
+<body>
+  <!-- SVG Sprite Definitions Start -->
+{{svgdefs.svg}}
+  <!-- SVG Sprite Definitions End -->
+  <!-- Header Start -->
+  <header class="main-header">
+    <nav class="main-nav  clearfix">
+      <a class="back-button" href="http://xiaol.me"><svg class="icon-arrow-left"><use xlink:href="#icon-arrow-left"></use></svg>Home</a>
+      <a class="subscribe-button" href="http://xiaol.me/rss/"><svg class="icon-rss"><use xlink:href="#icon-rss"></use></svg>Subscribe</a>
+    </nav>
+  </header>
+  <!-- Header End -->
+  <!-- Main Content Start -->
+  <section class="main-content">
+    <section id="mycanvas">
+    </section>
+  </section>
+  <!-- Main Content End -->
+  <!-- Footer Start -->
+  <footer class="site-footer clearfix">
+    <section class="copyright">
+      <a href="http://xiaol.me">X1a0 L0nG's</a> © 2014
+    </section>
+    <section class="poweredby">
+      Proudly published with <a href="https://ghost.org">Ghost</a>
+    </section>
+  </footer>
+  <!-- Footer End -->
+  
+  <!-- Template Start -->
+  <script type="text/template" id="panel-tpl">
+    <div class="sp-panel">
+      <div class="sp-panel-header clearfix">
+        <a class="sp-panel-icon active" href="javascript:;"><svg class="icon-add"><use xlink:href="#icon-add"></use></svg><svg class="icon-subtract"><use xlink:href="#icon-subtract"></use></svg></a>
+      </div>
+      <div class="sp-panel-content">
+        <a class="sp-panel-icon" href="javascript:;">
+          <svg class="icon-picture"><use xlink:href="#icon-picture"></use></svg>
+          <input type="file" id="filechooser"/>
+        </a>
+      </div>
+    </div>
+  </script>
+  <!-- Template End -->
+  <!-- JS Start -->
+  <script type="text/javascript" src="js/jquery.js"></script>
+  <script type="text/javascript" src="js/raphael.js"></script>
+  <script type="text/javascript" src="js/strokepainter.js"></script>
+  <script type="text/javascript" src="js/index.js"></script>
+  <!-- JS End -->
+</body>
+</html>

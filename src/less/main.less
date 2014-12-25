@@ -1,0 +1,108 @@
+.main-content {
+  display: table;
+  border-spacing: 0;
+  position: relative;
+  width: 100%;
+  height: 100%;
+  padding-top: @header-height + 5;
+  padding-bottom: @footer-height + 5;
+  > section {
+    overflow: auto;
+    position: absolute;
+    top: @header-height;
+    bottom: @footer-height;
+    left: 0;
+    right: 0;
+    width: 100%;
+    text-align: center;
+  }
+}
+
+#mycanvas {
+  > svg {
+    background-color: #FFF;
+    margin: 5px auto;
+    .box-shadow (1px -1px 6px 2px #DCDCDC);
+  }
+}
+
+@media (-ms-high-contrast: none) {
+  *::-ms-backdrop , .main-content {
+    display: inline-block;
+  }
+}
+
+.sp-panel {
+  position: fixed;
+  z-index: 2;
+  top: 70px;
+  right: 50px;
+  border: 1px solid #dcdcdc;
+  border-radius: 5px;
+  text-align: left;
+  padding: 0;
+  background: #FFF;
+  .box-shadow (1px -1px 6px 2px #DCDCDC);
+}
+.sp-panel-icon {
+    color: #9EABB3;
+}
+
+.sp-panel-header {
+  cursor: move;
+  min-height: 25px;
+  padding: 0 5px;
+  .sp-panel-icon {
+    float: right;
+    > svg {
+      width: 10px;
+      height: 10px;
+    }
+    .icon-add {
+      display: inline-block;
+    }
+    .icon-subtract {
+      display: none;
+    }
+    &.active {
+      .icon-add {
+        display: none;
+      }
+      .icon-subtract {
+        display: inline-block;
+      }
+    }
+  }
+}
+
+.sp-panel-content {
+  padding: 0 10px;
+  .sp-panel-icon {
+      color: #9EABB3;
+      display: block;
+      position: relative;
+      > svg {
+        width: 25px;
+        height: 25px;
+      }
+      &.active, &:active{
+        color: darken(#9EABB3, 30%);
+      }
+      &.hover, &:hover{
+        color: darken(#9EABB3, 15%);
+      }
+      > input {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 25px;
+        height: 25px;
+        margin: 0;
+        opacity: 0;
+        filter: alpha(opacity=0);
+        cursor: pointer;
+        text-indent: -99999px;
+      }
+  }
+}
+
