@@ -73,11 +73,11 @@ gulp.task('watch', function() {
         console.log('File ' + event.path + ' was ' + event.type
             + ', running tasks...');
       });
-
-  gulp.watch('src/js/*', [ 'uglify' ]).on(
-      'change',
-      function(event) {
-        console.log('File ' + event.path + ' was ' + event.type
-            + ', running tasks...');
-      });
+//
+//  gulp.watch('src/js/*', [ 'uglify' ]).on(
+//      'change',
+//      function(event) {
+//        console.log('File ' + event.path + ' was ' + event.type
+//            + ', running tasks...');
+//      });
 });

@@ -155,7 +155,7 @@
     width : 1280,
     height : 800,
     panel : $('#panel-tpl'),
-    tools : [ 'brush', 'preview' ]
+    tools : [ 'brush', 'chooser', 'preview' ]
   });
   var spPanel = $('#mycanvas .sp-panel');
   spPanel.dragdrop({

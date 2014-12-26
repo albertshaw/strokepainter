@@ -126,7 +126,7 @@ if (typeof Raphael === 'undefined') {
     init : function(painter) {
       var me = this;
       me.painter = painter;
-      me.icon = $('<a class="sp-panel-icon" href="javascript:;"><svg class="icon-pencil"><use xlink:href="#icon-pencil"></use></svg></a>');
+      me.icon = $('<a class="sp-panel-icon" href="javascript:;" title="画笔"><svg class="icon-pencil"><use xlink:href="#icon-pencil"></use></svg></a>');
       painter.panel.find('.sp-panel-content').append(me.icon);
       me.icon.on('click', function() {
         if (me.icon.is('.active')) {
@@ -201,7 +201,7 @@ if (typeof Raphael === 'undefined') {
     init : function(painter) {
       var me = this;
       me.painter = painter;
-      me.icon = $('<a class="sp-panel-icon" href="javascript:;"><svg class="icon-target"><use xlink:href="#icon-target"></use></svg></a>');
+      me.icon = $('<a class="sp-panel-icon" href="javascript:;" title="选择"><svg class="icon-target"><use xlink:href="#icon-target"></use></svg></a>');
       painter.panel.find('.sp-panel-content').append(me.icon);
       me.icon.click(function() {
         if (me.icon.is('.active')) {
@@ -213,7 +213,7 @@ if (typeof Raphael === 'undefined') {
     }
   }
   Chooser.fn.init.prototype = Chooser.fn;
-  var subpanel = '<a class="sp-panel-icon" href="javascript:;"><svg class="icon-statistics"><use xlink:href="#icon-statistics"></use></svg></a>';
+  var subpanel = '<div class="sp-subpanel-section"><input type="text" value="5"/><a title="路径点抽稀" class="sp-panel-icon" href="javascript:;"><svg class="icon-statistics"><use xlink:href="#icon-statistics"></use></svg></a></div>';
   $.extend(Chooser.fn, {
     subpanel : subpanel,
     compress : function() {
@@ -234,7 +234,16 @@ if (typeof Raphael === 'undefined') {
         })
       }
       this.dp(points[0], points[points.length - 1], points);
-
+      pathArr = [];
+      for (var i = 0; i < points.length; i++) {
+        var p = points[i];
+        if (!p.remove) {
+          pathArr.push(i == 0 ? 'M' : 'L');
+          pathArr.push(p.x);
+          pathArr.push(p.y);
+        }
+      }
+      this.selected.attr('path', pathArr);
     },
     dp : function(from, to, points) {
       var A = (from.y - to.y)
@@ -258,26 +267,21 @@ if (typeof Raphael === 'undefined') {
       var dmax = 0, maxPoint = {};
       var distance = 0;
       for (var i = m + 1; i < n; i++) {
-        distance = Math.abs(A * (points[i].x) + B * (points[i].y) + C)
+        var p = points[i];
+        distance = Math.abs(A * (p.x) + B * (p.y) + C)
             / Math.sqrt(Math.pow(A, 2) + Math.pow(B, 2));
         if (dmax < distance) {
           dmax = distance;
-          maxPoint = points[i];
+          maxPoint = p;
         }
       }
-      if (dmax <= 5) {
+      if (dmax <= this.threshold) {
         for (var i = m + 1; i < n; i++) {
           points[i].remove = true;
         }
       } else {
-        for (var i = m + 1; i < n; i++) {
-          if ((Math.abs(A * (points[i].x) + B * (points[i].y) + C)
-              / Math.sqrt(Math.pow(A, 2) + Math.pow(B, 2)) == dmax)) {
-            middle = points[i];
-          }
-        }
-        dp(from, middle, points);
-        dp(middle, to, points);
+        this.dp(from, maxPoint, points);
+        this.dp(maxPoint, to, points);
       }
     },
     activated : function() {
@@ -298,6 +302,7 @@ if (typeof Raphael === 'undefined') {
           function() {
             var $this = $(this);
             if ($this.is('.icon-statistics')) {
+              me.threshold = $this.parent().siblings('input').val() || 1;
               me.compress();
             }
           }).html(me.subpanel).removeClass('hidden').slideDown();
@@ -308,6 +313,8 @@ if (typeof Raphael === 'undefined') {
       this.painter.panel.find('.sp-subpanel').slideUp();
       this.resume(this.hovered);
       this.resume(this.selected);
+      this.hovered = null;
+      this.selected = null;
       this.icon.removeClass('active');
     },
     click : function() {
@@ -347,7 +354,7 @@ if (typeof Raphael === 'undefined') {
     init : function(painter) {
       var me = this;
       me.painter = painter;
-      me.icon = $('<a class="sp-panel-icon" href="javascript:;"><svg class="icon-eye"><use xlink:href="#icon-eye"></use></svg></a>');
+      me.icon = $('<a class="sp-panel-icon" href="javascript:;" title="预览"><svg class="icon-eye"><use xlink:href="#icon-eye"></use></svg></a>');
       painter.panel.find('.sp-panel-content').append(me.icon);
       me.icon
           .click(function() {
