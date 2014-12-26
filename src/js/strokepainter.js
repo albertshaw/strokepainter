@@ -262,7 +262,7 @@ if (typeof Raphael === 'undefined') {
             / Math.sqrt(Math.pow(A, 2) + Math.pow(B, 2));
         if (dmax < distance) {
           dmax = distance;
-          maxPoint = 
+          maxPoint = points[i];
         }
       }
       if (dmax <= 5) {
