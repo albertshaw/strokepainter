@@ -100,6 +100,13 @@ if (typeof Raphael === 'undefined') {
         this.activatedTool.deactivated();
       }
       this.activatedTool = "";
+    },
+    getMouseOffsetPosition : function(evt) {
+      var cnvsOffset = this.canvas.offset();
+      return {
+        left : evt.pageX - cnvsOffset.left,
+        top : evt.pageY - cnvsOffset.top
+      }
     }
   });
 
@@ -145,14 +152,14 @@ if (typeof Raphael === 'undefined') {
       if (this.painting) {
         return;
       }
-      var me = this;
       this.painting = true;
-      var pathArr = [ 'M', event.offsetX, event.offsetY ], path;
+      var me = this, offsetP = this.painter.getMouseOffsetPosition(event), pathArr = [
+          'M', offsetP.left, offsetP.top ], path;
       this.painter.canvas.on('mousemove.strokepainter.brush', function(evt) {
+        var offsetXY = me.painter.getMouseOffsetPosition(evt);
         pathArr.push('L');
-        // FIXME firefox does NOT support offsetX offsetY
-        pathArr.push(evt.offsetX);
-        pathArr.push(evt.offsetY);
+        pathArr.push(offsetXY.left);
+        pathArr.push(offsetXY.top);
         if (!path) {
           // TODO customize path and stroke with
           path = me.painter.paper.path().attr({
