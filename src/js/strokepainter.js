@@ -22,6 +22,11 @@ if (typeof Raphael === 'undefined') {
     tools : {},
     addTool : function(name, fn) {
       this.tools[name] = fn;
+    },
+    log : function(){
+      if(typeof(console) !== 'undefined'){
+        console.log.apply(console, arguments);
+      }
     }
   });
 
@@ -82,7 +87,7 @@ if (typeof Raphael === 'undefined') {
       if ($.isFunction(tool)) {
         this.tools[name] = tool(this);
       } else {
-        console.warn('Tool: ' + name + ' not found!');
+        SP.log('Tool: ' + name + ' not found!');
       }
     },
     active : function(name) {
@@ -213,7 +218,7 @@ if (typeof Raphael === 'undefined') {
     }
   }
   Chooser.fn.init.prototype = Chooser.fn;
-  var subpanel = '<div class="sp-subpanel-section"><input type="text" value="5"/><a title="路径点抽稀" class="sp-panel-icon" href="javascript:;"><svg class="icon-statistics"><use xlink:href="#icon-statistics"></use></svg></a></div>';
+  var subpanel = '<div class="sp-subpanel-section"><input title="抽稀系数" type="text" value="5"/><a title="路径点抽稀" class="sp-panel-icon" href="javascript:;"><svg class="icon-statistics"><use xlink:href="#icon-statistics"></use></svg></a></div>';
   $.extend(Chooser.fn, {
     subpanel : subpanel,
     compress : function() {
@@ -222,9 +227,7 @@ if (typeof Raphael === 'undefined') {
       var pathStr = this.selected.node.getAttribute('d');
       if (!pathStr)
         return;
-      console.log(pathStr);
       var pathArr = pathStr.split(/\D+/).slice(1);
-      console.log(pathArr);
       var points = [];
       for (var i = 0, idx = 0; i < pathArr.length;) {
         points.push({
@@ -246,6 +249,7 @@ if (typeof Raphael === 'undefined') {
       this.selected.attr('path', pathArr);
     },
     dp : function(from, to, points) {
+      //获取直线一般式系数
       var A = (from.y - to.y)
           / Math.sqrt(Math.pow((from.y - to.y), 2)
               + Math.pow((from.x - to.x), 2));
@@ -256,25 +260,27 @@ if (typeof Raphael === 'undefined') {
       var C = (from.x * to.y - to.x * from.y)
           / Math.sqrt(Math.pow((from.y - to.y), 2)
               + Math.pow((from.x - to.x), 2));
-
       var m = from.i;
       var n = to.i;
       if (n == m + 1) {
         return;
       }
-
-      var middle = {};
+			//获取到直线的最远点
       var dmax = 0, maxPoint = {};
       var distance = 0;
       for (var i = m + 1; i < n; i++) {
         var p = points[i];
-        distance = Math.abs(A * (p.x) + B * (p.y) + C)
-            / Math.sqrt(Math.pow(A, 2) + Math.pow(B, 2));
-        if (dmax < distance) {
-          dmax = distance;
-          maxPoint = p;
+        if(!p.remove){
+          distance = Math.abs(A * (p.x) + B * (p.y) + C)
+          / Math.sqrt(Math.pow(A, 2) + Math.pow(B, 2));
+          if (dmax < distance) {
+            dmax = distance;
+            maxPoint = p;
+          }
         }
       }
+      
+      //最远点都小于阈值的点标记删除，否则以最远点为中点，继续抽稀检查。
       if (dmax <= this.threshold) {
         for (var i = m + 1; i < n; i++) {
           points[i].remove = true;
@@ -358,7 +364,7 @@ if (typeof Raphael === 'undefined') {
       painter.panel.find('.sp-panel-content').append(me.icon);
       me.icon
           .click(function() {
-            console.log(me.painter.canvas[0].outerHTML);
+            SP.log(me.painter.canvas[0].outerHTML);
             me.painter.active('preview');
             var paths = me.painter.canvas.find('path');
             paths
