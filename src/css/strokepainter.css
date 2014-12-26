@@ -748,6 +748,7 @@ iframe,
   z-index: 2;
   top: 70px;
   right: 50px;
+  width: 45px;
   border: 1px solid #dcdcdc;
   border-radius: 5px;
   text-align: left;
@@ -759,6 +760,33 @@ iframe,
 .sp-panel-icon {
   color: #9EABB3;
 }
+.sp-subpanel {
+  padding: 5px 5px;
+  position: absolute;
+  top: 20px;
+  right: 50px;
+  border: 1px solid #dcdcdc;
+  border-radius: 5px;
+  -webkit-box-shadow: 1px -1px 6px 2px #dcdcdc;
+  box-shadow: 1px -1px 6px 2px #dcdcdc;
+}
+.sp-subpanel .sp-panel-icon {
+  color: #9EABB3;
+  display: block;
+  position: relative;
+}
+.sp-subpanel .sp-panel-icon > svg {
+  width: 20px;
+  height: 20px;
+}
+.sp-subpanel .sp-panel-icon.active,
+.sp-subpanel .sp-panel-icon:active {
+  color: #515f67;
+}
+.sp-subpanel .sp-panel-icon.hover,
+.sp-subpanel .sp-panel-icon:hover {
+  color: #738691;
+}
 .sp-panel-header {
   cursor: move;
   min-height: 25px;
@@ -768,8 +796,8 @@ iframe,
   float: right;
 }
 .sp-panel-header .sp-panel-icon > svg {
-  width: 10px;
-  height: 10px;
+  width: 12px;
+  height: 12px;
 }
 .sp-panel-header .sp-panel-icon .icon-add {
   display: inline-block;

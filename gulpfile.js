@@ -15,13 +15,6 @@ gulp.task('less', function() {
       gulp.dest('src/css')).pipe(mincss()).pipe(gulp.dest('./css'));
 });
 
-gulp.task('watch', function() {
-  var watcher = gulp.watch('src/less/*.less', ['less']);
-  watcher.on('change', function(event) {
-    console.log('File ' + event.path + ' was ' + event.type + ', running tasks...');
-  });
-});
-
 gulp.task('uglify', function() {
   gulp.src('src/js/*').pipe(uglify()).pipe(gulp.dest('./js'));
 });
@@ -64,4 +57,27 @@ gulp.task('clean', function() {
   gulp.src('src/css/*').pipe(clean({
     force : true
   }));
+});
+
+gulp.task('watch', function() {
+  gulp.watch('src/less/*.less', [ 'less' ]).on(
+      'change',
+      function(event) {
+        console.log('File ' + event.path + ' was ' + event.type
+            + ', running tasks...');
+      });
+
+  gulp.watch('src/view/*', [ 'view' ]).on(
+      'change',
+      function(event) {
+        console.log('File ' + event.path + ' was ' + event.type
+            + ', running tasks...');
+      });
+
+  gulp.watch('src/js/*', [ 'uglify' ]).on(
+      'change',
+      function(event) {
+        console.log('File ' + event.path + ' was ' + event.type
+            + ', running tasks...');
+      });
 });

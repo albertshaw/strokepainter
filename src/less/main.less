@@ -37,6 +37,7 @@
   z-index: 2;
   top: 70px;
   right: 50px;
+  width: 45px;
   border: 1px solid #dcdcdc;
   border-radius: 5px;
   text-align: left;
@@ -44,8 +45,36 @@
   background: #FFF;
   .box-shadow (1px -1px 6px 2px #DCDCDC);
 }
+
 .sp-panel-icon {
+  color: #9EABB3;
+}
+
+.sp-subpanel {
+  padding: 5px 5px;
+  position: absolute;
+  top: 20px;
+  right: 50px;
+  border: 1px solid #dcdcdc;
+  border-radius: 5px;
+  .box-shadow (1px -1px 6px 2px #DCDCDC);
+  .sp-panel-icon {
     color: #9EABB3;
+    display: block;
+    position: relative;
+    > svg {
+      width: 20px;
+      height: 20px;
+    }
+    
+    &.active , &:active {
+      color: darken(#9EABB3, 30%);
+    }
+
+    &.hover , &:hover {
+      color: darken(#9EABB3, 15%);
+    }
+  }
 }
 
 .sp-panel-header {
@@ -55,19 +84,23 @@
   .sp-panel-icon {
     float: right;
     > svg {
-      width: 10px;
-      height: 10px;
+      width: 12px;
+      height: 12px;
     }
+
     .icon-add {
       display: inline-block;
     }
+
     .icon-subtract {
       display: none;
     }
+
     &.active {
       .icon-add {
         display: none;
       }
+
       .icon-subtract {
         display: inline-block;
       }
@@ -78,31 +111,34 @@
 .sp-panel-content {
   padding: 0 10px;
   .sp-panel-icon {
-      color: #9EABB3;
-      display: block;
-      position: relative;
-      > svg {
-        width: 25px;
-        height: 25px;
-      }
-      &.active, &:active{
-        color: darken(#9EABB3, 30%);
-      }
-      &.hover, &:hover{
-        color: darken(#9EABB3, 15%);
-      }
-      > input {
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 25px;
-        height: 25px;
-        margin: 0;
-        opacity: 0;
-        filter: alpha(opacity=0);
-        cursor: pointer;
-        text-indent: -99999px;
-      }
+    color: #9EABB3;
+    display: block;
+    position: relative;
+    > svg {
+      width: 25px;
+      height: 25px;
+    }
+
+    &.active , &:active {
+      color: darken(#9EABB3, 30%);
+    }
+
+    &.hover , &:hover {
+      color: darken(#9EABB3, 15%);
+    }
+
+    > input {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 25px;
+      height: 25px;
+      margin: 0;
+      opacity: 0;
+      filter: alpha(opacity=0);
+      cursor: pointer;
+      text-indent: -99999px;
+    }
   }
 }
 

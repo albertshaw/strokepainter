@@ -40,6 +40,8 @@
   <!-- Template Start -->
   <script type="text/template" id="panel-tpl">
     <div class="sp-panel">
+      <div class="sp-subpanel clearfix hidden">
+      </div>
       <div class="sp-panel-header clearfix">
         <a class="sp-panel-icon active" href="javascript:;"><svg class="icon-add"><use xlink:href="#icon-add"></use></svg><svg class="icon-subtract"><use xlink:href="#icon-subtract"></use></svg></a>
       </div>
@@ -64,14 +66,14 @@
           .write(unescape("%3Cscript src='"
               + gaJsHost
               + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
-  </script>
+    </script>
   <script type="text/javascript">
       try {
         var pageTracker = _gat._getTracker("UA-32437238-1");
         pageTracker._trackPageview();
       } catch (err) {
       }
-  </script>
+    </script>
   <!-- JS End -->
 </body>
 </html>

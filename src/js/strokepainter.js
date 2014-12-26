@@ -140,47 +140,51 @@ if (typeof Raphael === 'undefined') {
 
   Brush.fn.init.prototype = Brush.fn;
 
-  $.extend(Brush.fn, {
-    activated : function() {
-      this.icon.addClass('active');
-    },
-    deactivated : function() {
-      this.painter.canvas.off('.strokepainter.brush');
-      this.icon.removeClass('active');
-    },
-    mousedown : function(event) {
-      if (this.painting) {
-        return;
-      }
-      this.painting = true;
-      var me = this, offsetP = this.painter.getMouseOffsetPosition(event), pathArr = [
-          'M', offsetP.left, offsetP.top ], path;
-      this.painter.canvas.on('mousemove.strokepainter.brush', function(evt) {
-        var offsetXY = me.painter.getMouseOffsetPosition(evt);
-        pathArr.push('L');
-        pathArr.push(offsetXY.left);
-        pathArr.push(offsetXY.top);
-        if (!path) {
-          // TODO customize path and stroke with
-          path = me.painter.paper.path().attr({
-            stroke : '#000',
-            'stroke-width' : 2,
-            path : pathArr
+  $
+      .extend(Brush.fn,
+          {
+            activated : function() {
+              this.icon.addClass('active');
+            },
+            deactivated : function() {
+              this.painter.canvas.off('.strokepainter.brush');
+              this.icon.removeClass('active');
+            },
+            mousedown : function(event) {
+              if (this.painting) {
+                return;
+              }
+              this.painting = true;
+              var me = this, offsetP = this.painter
+                  .getMouseOffsetPosition(event), pathArr = [ 'M',
+                  offsetP.left, offsetP.top ], path;
+              this.painter.canvas.on('mousemove.strokepainter.brush', function(
+                  evt) {
+                var offsetXY = me.painter.getMouseOffsetPosition(evt);
+                pathArr.push('L');
+                pathArr.push(offsetXY.left);
+                pathArr.push(offsetXY.top);
+                if (!path) {
+                  // TODO customize path and stroke with
+                  path = me.painter.paper.path().attr({
+                    stroke : '#000',
+                    'stroke-width' : 2,
+                    path : pathArr
+                  });
+                }
+                path.attr({
+                  path : pathArr
+                })
+              })
+            },
+            mouseup : function(event) {
+              if (!this.painting) {
+                return;
+              }
+              this.painting = false;
+              this.painter.canvas.off('mousemove.strokepainter.brush');
+            }
           });
-        }
-        path.attr({
-          path : pathArr
-        })
-      })
-    },
-    mouseup : function(event) {
-      if (!this.painting) {
-        return;
-      }
-      this.painting = false;
-      this.painter.canvas.off('mousemove.strokepainter.brush');
-    }
-  });
 
   SP.addTool('brush', Brush);
 })(jQuery, StrokePainter);
@@ -189,8 +193,145 @@ if (typeof Raphael === 'undefined') {
  */
 (function($, SP) {
   var Chooser = function(painter) {
-
+    return new Chooser.fn.init(painter);
   }
+  Chooser.fn = Chooser.prototype = {
+    constructor : Chooser,
+    name : 'chooser',
+    init : function(painter) {
+      var me = this;
+      me.painter = painter;
+      me.icon = $('<a class="sp-panel-icon" href="javascript:;"><svg class="icon-target"><use xlink:href="#icon-target"></use></svg></a>');
+      painter.panel.find('.sp-panel-content').append(me.icon);
+      me.icon.click(function() {
+        if (me.icon.is('.active')) {
+          me.painter.deactive('chooser');
+        } else {
+          me.painter.active('chooser');
+        }
+      });
+    }
+  }
+  Chooser.fn.init.prototype = Chooser.fn;
+  var subpanel = '<a class="sp-panel-icon" href="javascript:;"><svg class="icon-statistics"><use xlink:href="#icon-statistics"></use></svg></a>';
+  $.extend(Chooser.fn, {
+    subpanel : subpanel,
+    compress : function() {
+      if (!this.selected)
+        return;
+      var pathStr = this.selected.node.getAttribute('d');
+      if (!pathStr)
+        return;
+      console.log(pathStr);
+      var pathArr = pathStr.split(/\D+/).slice(1);
+      console.log(pathArr);
+      var points = [];
+      for (var i = 0, idx = 0; i < pathArr.length;) {
+        points.push({
+          x : pathArr[i++],
+          y : pathArr[i++],
+          i : idx++
+        })
+      }
+      this.dp(points[0], points[points.length - 1], points);
+
+    },
+    dp : function(from, to, points) {
+      var A = (from.y - to.y)
+          / Math.sqrt(Math.pow((from.y - to.y), 2)
+              + Math.pow((from.x - to.x), 2));
+      var B = (to.x - from.x)
+          / Math.sqrt(Math.pow((from.y - to.y), 2)
+              + Math.pow((from.x - to.x), 2));
+
+      var C = (from.x * to.y - to.x * from.y)
+          / Math.sqrt(Math.pow((from.y - to.y), 2)
+              + Math.pow((from.x - to.x), 2));
+
+      var m = from.i;
+      var n = to.i;
+      if (n == m + 1) {
+        return;
+      }
+
+      var middle = {};
+      var dmax = 0, maxPoint = {};
+      var distance = 0;
+      for (var i = m + 1; i < n; i++) {
+        distance = Math.abs(A * (points[i].x) + B * (points[i].y) + C)
+            / Math.sqrt(Math.pow(A, 2) + Math.pow(B, 2));
+        if (dmax < distance) {
+          dmax = distance;
+          maxPoint = 
+        }
+      }
+      if (dmax <= 5) {
+        for (var i = m + 1; i < n; i++) {
+          points[i].remove = true;
+        }
+      } else {
+        for (var i = m + 1; i < n; i++) {
+          if ((Math.abs(A * (points[i].x) + B * (points[i].y) + C)
+              / Math.sqrt(Math.pow(A, 2) + Math.pow(B, 2)) == dmax)) {
+            middle = points[i];
+          }
+        }
+        dp(from, middle, points);
+        dp(middle, to, points);
+      }
+    },
+    activated : function() {
+      var me = this;
+      me.painter.canvas.on('mouseover.strokepainter.chooser', 'path',
+          function() {
+            if (me.selected && me.selected.node == this)
+              return false;
+            var path = new Raphael.el.constructor(this, me.painter.paper);
+            path.type = 'path';
+            me.hovered = path;
+            me.highlight(path);
+          }).on('mouseleave.strokepainter.chooser', 'path', function() {
+        me.resume(me.hovered);
+        me.hovered = null;
+      });
+      me.painter.panel.find('.sp-subpanel').on('click', '.sp-panel-icon svg',
+          function() {
+            var $this = $(this);
+            if ($this.is('.icon-statistics')) {
+              me.compress();
+            }
+          }).html(me.subpanel).removeClass('hidden').slideDown();
+      me.icon.addClass('active');
+    },
+    deactivated : function() {
+      this.painter.canvas.off('.strokepainter.chooser');
+      this.painter.panel.find('.sp-subpanel').slideUp();
+      this.resume(this.hovered);
+      this.resume(this.selected);
+      this.icon.removeClass('active');
+    },
+    click : function() {
+      if (this.hovered) {
+        this.resume(this.selected);
+        this.selected = this.hovered;
+        this.hovered = null;
+      }
+    },
+    highlight : function(el) {
+      if (!el)
+        return;
+      el.attr({
+        'stroke-width' : 6
+      });
+    },
+    resume : function(el) {
+      if (!el)
+        return;
+      el.attr({
+        'stroke-width' : 2
+      });
+    }
+  });
   SP.addTool('chooser', Chooser);
 })(jQuery, StrokePainter);
 /*
