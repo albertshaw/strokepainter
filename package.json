@@ -1,5 +1,5 @@
 {
-  "name": "TinyPainter",
+  "name": "strokepainter",
   "version": "0.0.1",
   "description": "SVG painter mainly to make stroke animation more convenient",
   "main": "index.html",
